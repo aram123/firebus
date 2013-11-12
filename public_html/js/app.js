@@ -47,8 +47,8 @@ $(function() {
     var des_lon;
     var image = 'http://www.adiumxtras.com/images/thumbs/link_snes_1_12709_4630_thumb.png';
     var imageFin = 'http://rick.jinlabs.com/tango/triforce/32x32/triforce.png';
-    var busstop1;
-    var busstop2;
+    var origin1;
+    var origin2;
     localizame();
 
 
@@ -123,12 +123,35 @@ $(function() {
             console.log(des_lat + ' , ' + des_lon)
             var r = confirm('Agregar un punto')
             if (r === true) {
-                calculateDistances()
-                calcRoute()
-                drawPoint(map, image, des_lat, des_lon)
+                calcRoute();
+                drawPoint(map, image, des_lat, des_lon);
+                
+                origin1 = new google.maps.LatLng(latitud, longitud);
+                origin2 = new google.maps.LatLng(des_lat, des_lon);
+                calculateDistances(origin1, origin2);
             }
         })
     }
+    
+function calculateDistances(destinationA, destinationB) {
+  var service = new google.maps.DistanceMatrixService();
+  
+  service.getDistanceMatrix(
+    {
+      origins: [destinationA],
+      destinations: [destinationB],
+      travelMode: google.maps.TravelMode.WALKING,
+      unitSystem: google.maps.UnitSystem.METRIC,
+      avoidHighways: false,
+      avoidTolls: false
+    }, callback);
+}
+
+function callback(response, status) {
+  console.log(response.rows[0].elements[0].distance.text);
+  return response.rows[0].elements[0].distance.text;
+}
+    
     function calcRoute() {
         var request = {
             origin: latitud + ',' + longitud,
