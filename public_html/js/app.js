@@ -7,7 +7,7 @@ $(function() {
     var precision;
     var des_lat;
     var des_lon;
-    var  image = 'http://www.adiumxtras.com/images/thumbs/link_snes_1_12709_4630_thumb.png';
+    var image = 'http://www.adiumxtras.com/images/thumbs/link_snes_1_12709_4630_thumb.png';
     var imageFin = 'http://rick.jinlabs.com/tango/triforce/32x32/triforce.png';
     localizame();
 
@@ -53,13 +53,13 @@ $(function() {
     var directionsService = new google.maps.DirectionsService();
     var map;
 
-   // var des = new google.maps.LatLng(28.655283, -106.070133);
+    // var des = new google.maps.LatLng(28.655283, -106.070133);
 
 
     function mapdraw() {
-        
-         var des = new google.maps.LatLng(latitud,longitud);
-         var mapOptions = {
+
+        var des = new google.maps.LatLng(latitud, longitud);
+        var mapOptions = {
             zoom: 17,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             center: des,
@@ -69,8 +69,8 @@ $(function() {
         directionsDisplay.setMap(map);
 
 
-       
-        var myLatLng = new google.maps.LatLng(latitud,longitud);
+
+        var myLatLng = new google.maps.LatLng(latitud, longitud);
         var beachMarker = new google.maps.Marker({
             position: myLatLng,
             map: map,
@@ -80,19 +80,22 @@ $(function() {
         google.maps.event.addListener(map, 'click', function(e) {
             des_lat = e.latLng.ob
             des_lon = e.latLng.pb
-            console.log(des_lat+' , '+des_lon)
+            console.log(des_lat + ' , ' + des_lon)
             var r = confirm('Agregar un punto')
-                    if(r===true){
-                       calcRoute()
-                       drawPoint(map, image, des_lat, des_lon)
-                    }
+            if (r === true) {
+                calcRoute()
+                drawPoint(map, image, des_lat, des_lon)
+            }
         })
     }
     function calcRoute() {
         var request = {
             origin: latitud + ',' + longitud,
             destination: des_lat + ',' + des_lon,
-            waypoints : [{location : '28.635213971444706,106.08183860778809'}],
+            waypoints: [{location: '28.635213971444706,-106.08183860778809'},
+            {location: "28.637794081866083 , -106.0791563987732"},
+            {location :"28.64125923983104 , -106.07537984848022"},
+            {location : "28.64366971700008 , -106.07286930084229"}],
             travelMode: google.maps.DirectionsTravelMode.DRIVING
         };
         directionsService.route(request, function(response, status) {
@@ -100,6 +103,7 @@ $(function() {
                 directionsDisplay.setDirections(response);
             }
         });
+
     }
 
     function drawPoint(map, image, x, y) {
@@ -111,7 +115,7 @@ $(function() {
         });
     }
 
-    //google.maps.event.addDomListener(window, 'load', initialize);
+    google.maps.event.addDomListener(window, 'load', mapdraw);
 
 
 
