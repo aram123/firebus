@@ -1,5 +1,43 @@
 $(function() {
 
+    var busStop = {
+        "0": {
+            'ruta': 1,
+            'coor': "28.635213971444706 , -106.08183860778809",
+            'nombre': "Parque heroes",
+            'esPa': 1,
+        },
+        "1": {
+            'ruta': 1,
+            'coor': "28.637794081866083 , -106.0791563987732",
+            'nombre': "Centro",
+            'esPa': 1,
+        },
+        "2": {
+            'ruta': 1,
+            'coor': "28.64474311478968 , -106.07177495956421",
+            'nombre': "",
+            'esPa': 0,
+        },
+        "3": {
+            'ruta': 1,
+            'coor': "28.645703514027513 , -106.0741138458252",
+            'nombre': "Trancito",
+            'esPa': 1,
+        },
+        "4": {
+            'ruta': 1,
+            'coor': "28.641391064232934 , -106.07761144638062",
+            'nombre': "",
+            'esPa': 0,
+        },
+        "5": {
+            'ruta': 1,
+            'coor': "28.63193695142568 , -106.08338356018066",
+            'nombre': "Puente",
+            'esPa': 1,
+        }
+    };
 
     var map;
     var latitud;
@@ -9,6 +47,8 @@ $(function() {
     var des_lon;
     var image = 'http://www.adiumxtras.com/images/thumbs/link_snes_1_12709_4630_thumb.png';
     var imageFin = 'http://rick.jinlabs.com/tango/triforce/32x32/triforce.png';
+    var busstop1;
+    var busstop2;
     localizame();
 
 
@@ -83,6 +123,7 @@ $(function() {
             console.log(des_lat + ' , ' + des_lon)
             var r = confirm('Agregar un punto')
             if (r === true) {
+                calculateDistances()
                 calcRoute()
                 drawPoint(map, image, des_lat, des_lon)
             }
@@ -93,9 +134,9 @@ $(function() {
             origin: latitud + ',' + longitud,
             destination: des_lat + ',' + des_lon,
             waypoints: [{location: '28.635213971444706,-106.08183860778809'},
-            {location: "28.637794081866083 , -106.0791563987732"},
-            {location :"28.64125923983104 , -106.07537984848022"},
-            {location : "28.64366971700008 , -106.07286930084229"}],
+                {location: "28.637794081866083 , -106.0791563987732"},
+                {location: "28.64125923983104 , -106.07537984848022"},
+                {location: "28.64366971700008 , -106.07286930084229"}],
             travelMode: google.maps.DirectionsTravelMode.DRIVING
         };
         directionsService.route(request, function(response, status) {
@@ -114,6 +155,17 @@ $(function() {
             map: map,
             icon: imageFin
         });
+    }
+
+
+    function calculateDistances() {
+
+            var glatlng1 = new GLatLng(latitud + ',' + longitud);
+            var glatlng2 = new GLatLng( "28.637794081866083 , -106.0791563987732");
+            var miledistance = glatlng1.distanceFrom(glatlng2, 3959).toFixed(1);
+            var kmdistance = (miledistance * 1.609344).toFixed(1);
+            alert(kmdistance);
+        
     }
 
     google.maps.event.addDomListener(window, 'load', mapdraw);

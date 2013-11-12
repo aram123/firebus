@@ -50,6 +50,46 @@ document.addEventListener("DOMContentLoaded", function() {
 "28.63193695142568 , -106.08338356018066"
 ]
 **/
+
+var busStop = {
+    "0" : {
+        'ruta' : 1,
+        'coor' : "28.635213971444706 , -106.08183860778809",
+        'nombre': "Parque heroes",
+        'esPa' : 1,
+    },
+    "1" : {
+        'ruta' : 1,
+        'coor' : "28.637794081866083 , -106.0791563987732",
+        'nombre': "Centro",
+        'esPa' : 1,
+    },
+    "2" : {
+        'ruta' : 1,
+        'coor' : "28.64474311478968 , -106.07177495956421",
+        'nombre': "",
+        'esPa' : 0,
+    },
+    "3" : {
+        'ruta' : 1,
+        'coor' : "28.645703514027513 , -106.0741138458252",
+        'nombre': "Trancito",
+        'esPa' : 1,
+    },
+    "4" : {
+        'ruta' : 1,
+        'coor' : "28.641391064232934 , -106.07761144638062",
+        'nombre': "",
+        'esPa' : 0,
+    },
+    "5" : {
+        'ruta' : 1,
+        'coor' : "28.63193695142568 , -106.08338356018066",
+        'nombre': "Puente",
+        'esPa' : 1,
+    }
+}
+
 function fillBusStop(){
     console.log('maybe false...');
     if(initDb){
@@ -129,6 +169,10 @@ function getAllBussStop() {
             cursor.continue();
             
             console.log(window.result);
+            
+            
+            
+            
 
         }
         
@@ -138,4 +182,19 @@ function getAllBussStop() {
 function logBusStops() {
     fillBusStop();
     getAllBussStop(); 
+}
+
+function calculateDistances(a,b) {
+  var service = new google.maps.DistanceMatrixService();
+  service.getDistanceMatrix(
+    {
+      origins: [a],
+      destinations: [b],
+      travelMode: google.maps.TravelMode.DRIVING,
+      unitSystem: google.maps.UnitSystem.METRIC,
+      avoidHighways: false,
+      avoidTolls: false
+    }, function(){
+        
+    });
 }
