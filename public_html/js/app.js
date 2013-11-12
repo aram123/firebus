@@ -1,18 +1,20 @@
 $(function() {
-    
-    
+
+
     var map;
     var latitud;
     var longitud;
     var precision;
-
-    localizame();            
+    var des_lat;
+    var des_lon;
+    var  image = 'http://www.adiumxtras.com/images/thumbs/link_snes_1_12709_4630_thumb.png';
+    localizame();
 
 
     function localizame() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(coordenadas, errores);
-        }else{
+        } else {
             alert('Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
         }
     }
@@ -20,9 +22,9 @@ $(function() {
     function coordenadas(position) {
         latitud = position.coords.latitude;
         longitud = position.coords.longitude;
-        precision = position.coords.accuracy;  
+        precision = position.coords.accuracy;
         calcRoute();
-    }        
+    }
 
     function errores(err) {
         if (err.code == 0) {
@@ -42,39 +44,53 @@ $(function() {
 
 
     var rendererOptions = {
-        draggable: true
+//        draggable: true
     };
-    var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);;
+
+    var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+    ;
     var directionsService = new google.maps.DirectionsService();
     var map;
 
-    var geocon = new google.maps.LatLng(28.655283,-106.070133);
+    var des = new google.maps.LatLng(28.655283, -106.070133);
 
     function initialize() {
 
         var mapOptions = {
             zoom: 17,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
-            center: geocon
+            center: des,
+            streetViewControl: false
         };
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
         directionsDisplay.setMap(map);
 
-  
-        image = 'http://www.adiumxtras.com/images/thumbs/link_snes_1_12709_4630_thumb.png';
-        var myLatLng = new google.maps.LatLng(28.655283,-106.070133);
+
+       
+        var myLatLng = new google.maps.LatLng(28.655283, -106.070133);
         var beachMarker = new google.maps.Marker({
             position: myLatLng,
             map: map,
             icon: image
         });
 
+        google.maps.event.addListener(map, 'click', function(e) {
+            des_lat = e.latLng.ob
+            des_lon = e.latLng.pb
+            console.log(des_lat+' , '+des_lon)
+            var r = confirm('Agregar un punto')
+                    if(r===true){
+                       calcRoute()
+                       drawPoint(map, image, des_lat, des_lon)
+                    }
+        })
+
     }
 
     function calcRoute() {
         var request = {
-            origin: latitud+','+longitud,
-            destination: '28.655283,-106.070133',
+            origin: latitud + ',' + longitud,
+            destination: des_lat + ',' + des_lon,
             travelMode: google.maps.DirectionsTravelMode.DRIVING
         };
         directionsService.route(request, function(response, status) {
@@ -84,10 +100,19 @@ $(function() {
         });
     }
 
+    function drawPoint(map, image, x, y) {
+        var myLatLng = new google.maps.LatLng(x, y);
+        var beachMarker = new google.maps.Marker({
+            position: myLatLng,
+            map: map,
+            icon: image
+        });
+    }
+
     google.maps.event.addDomListener(window, 'load', initialize);
 
 
-    
+
 //    $("#get-battery").click(function() {
 //        $("#battery-pct").text(Math.round(navigator.battery.level * 100) + "%");
 //    });
