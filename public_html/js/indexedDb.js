@@ -123,14 +123,15 @@ function getAllBussStop() {
             for (var field in cursor.value) {
                 currentObj.push(cursor.value[field]);
             }
-            window.result.push(currentObj);
+//            window.result.push(currentObj);
+            window.result.push(cursor.value);
+//            console.log(window.result);
             cursor.continue();
+            
+            console.log(window.result);
+
         }
-        $.each(window.result,function(f, elem){
-                $.each(elem, function(index, value){
-                    console.log(value);
-                }); 
-            });        
+        
     }
 }
 

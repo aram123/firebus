@@ -7,7 +7,7 @@ $(function() {
     var precision;
     var des_lat;
     var des_lon;
-    var  image = 'http://www.adiumxtras.com/images/thumbs/link_snes_1_12709_4630_thumb.png';
+    var image = 'http://www.adiumxtras.com/images/thumbs/link_snes_1_12709_4630_thumb.png';
     var imageFin = 'http://rick.jinlabs.com/tango/triforce/32x32/triforce.png';
     localizame();
 
@@ -53,13 +53,13 @@ $(function() {
     var directionsService = new google.maps.DirectionsService();
     var map;
 
-   // var des = new google.maps.LatLng(28.655283, -106.070133);
+    // var des = new google.maps.LatLng(28.655283, -106.070133);
 
 
     function mapdraw() {
-        
-         var des = new google.maps.LatLng(latitud,longitud);
-         var mapOptions = {
+
+        var des = new google.maps.LatLng(latitud, longitud);
+        var mapOptions = {
             zoom: 17,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             center: des,
@@ -69,8 +69,8 @@ $(function() {
         directionsDisplay.setMap(map);
 
 
-       
-        var myLatLng = new google.maps.LatLng(latitud,longitud);
+
+        var myLatLng = new google.maps.LatLng(latitud, longitud);
         var beachMarker = new google.maps.Marker({
             position: myLatLng,
             map: map,
@@ -80,24 +80,27 @@ $(function() {
         google.maps.event.addListener(map, 'click', function(e) {
             des_lat = e.latLng.ob
             des_lon = e.latLng.pb
-            console.log(des_lat+' , '+des_lon)
+            console.log(des_lat + ' , ' + des_lon)
             var r = confirm('Agregar un punto')
-                    if(r===true){
-                       calcRoute()
-                       drawPoint(map, image, des_lat, des_lon)
-                    }
+            if (r === true) {
+                calcRoute()
+                drawPoint(map, image, des_lat, des_lon)
+                console.log(distHaversine());
+            }
         })
     }
     function calcRoute() {
         var request = {
             origin: latitud + ',' + longitud,
             destination: des_lat + ',' + des_lon,
-            waypoints : [{location : '28.635213971444706,106.08183860778809'}],
+            waypoints: [{location: '28.635213971444706,-106.08183860778809', stopover: true}],
+            optimizeWaypoints: true,
             travelMode: google.maps.DirectionsTravelMode.DRIVING
         };
         directionsService.route(request, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
+                console.log('direction setted');
             }
         });
     }
@@ -109,6 +112,23 @@ $(function() {
             map: map,
             icon: imageFin
         });
+    }
+
+    rad = function(x) {
+        return x * Math.PI / 180;
+    }
+
+    distHaversine = function(iniLat, endLat) {
+        var R = 6371; // earth's mean radius in km
+        var dLat = rad(endLat - iniLat);
+        var dLong = rad(endLat - iniLat);
+
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(rad(iniLat)) * Math.cos(rad(endLat)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = R * c;
+
+        return d.toFixed(3);
     }
 
     //google.maps.event.addDomListener(window, 'load', initialize);
