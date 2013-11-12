@@ -24,7 +24,7 @@ $(function() {
         latitud = position.coords.latitude;
         longitud = position.coords.longitude;
         precision = position.coords.accuracy;
-        calcRoute();
+        mapdraw();
     }
 
     function errores(err) {
@@ -56,7 +56,7 @@ $(function() {
    // var des = new google.maps.LatLng(28.655283, -106.070133);
 
 
-    function calcRoute() {
+    function mapdraw() {
         
          var des = new google.maps.LatLng(latitud,longitud);
          var mapOptions = {
@@ -87,10 +87,12 @@ $(function() {
                        drawPoint(map, image, des_lat, des_lon)
                     }
         })
-        
+    }
+    function calcRoute() {
         var request = {
             origin: latitud + ',' + longitud,
             destination: des_lat + ',' + des_lon,
+            waypoints : [{location : '28.635213971444706,106.08183860778809'}],
             travelMode: google.maps.DirectionsTravelMode.DRIVING
         };
         directionsService.route(request, function(response, status) {
